@@ -1,0 +1,335 @@
+\documentclass[10pt,a4paper,onecolumn]{article} % a4paper
+
+\def\baselinestretch{1.2} % space it
+\setlength{\parskip}{1.5mm plus4mm minus3mm}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[square,comma,numbers,sort&compress]{natbib}
+\usepackage{url}
+\usepackage[font={small}, labelfont=bf]{caption} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{bbm}
+
+\def\baselinestretch{1.2} % space it
+\setlength{\parskip}{1.5mm plus4mm minus3mm}
+
+\newcommand{\f}{\operatorname}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+
+
+\usepackage{hyperref}
+
+
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm
+\textheight 21cm
+\footskip 1.0cm
+
+
+\usepackage{xcolor} 
+% Resize equations
+\usepackage{environ}         % provides \BODY
+\usepackage{etoolbox}        % provides \ifdimcomp
+\usepackage{graphicx}        % provides \resizebox
+\newlength{\myl}
+\let\origequation=\equation
+\let\origendequation=\endequation
+\RenewEnviron{equation}{
+  \settowidth{\myl}{$\BODY$}  % calculate width and save as \myl
+  \origequation
+  \ifdimcomp{\the\linewidth}{>}{\the\myl}
+  {\ensuremath{\BODY}}                             % True
+  {\resizebox{\linewidth}{!}{\ensuremath{\BODY}}}  % False
+  \origendequation
+}
+
+
+\title{Asymptotic properties of the maximum product spacing estimator for right censored data}
+%\title{Improving power-law detection with Bayesian inference}
+%\title{Bayesian inference of power-laws and scale-free networks}
+
+\author{
+Pedro Luiz Ramos$^1$, Francisco A. Segovia$^1$ and Eduardo Ramos$^2$\\
+\normalsize{$^{1}$Faculty of Mathematics, Pontificia Universidad Católica de Chile, Santiago, Chile}\\
+\normalsize{$^{2}$Institute of Mathematical Science and Computing, University of S\~ao Paulo, S\~ao Carlos, Brazil}
+}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Maximum likelihood estimators (MLEs) and modified MLEs may fail to exist in several models, whereas the maximum product spacing (MPS) method is known to retain desirable properties under milder conditions. However, classical MPS does not accommodate censored observations. We propose a modification of MPS for randomly right--censored samples (encompassing Type~I and Type~II censoring) by combining spacing contributions from failures and survival terms from censored times. We show that, under standard regularity conditions, the proposed estimator is asymptotically equivalent to the MLE for censored data: it exists under broad conditions, is consistent, asymptotically normal, and attains the Fisher information bound. A Monte Carlo study with $1{,}000$ replications for sample sizes $n\in\{50,100,200,500\}$ across shifted Weibull, shifted lognormal, and shifted gamma models under several censoring rates indicates that bias and RMSE decrease with $n$, supporting the claimed asymptotic properties and demonstrating strong small--sample performance. The method remains applicable in settings where likelihood--based estimation is ill--behaved or fails to exist.
+\end{abstract}
+
+\section{Introduction}
+
+In many cases, the MLEs and the MMLEs do not exist and cannot be computed \citep{cheng1983estimating}. Other estimation methods have been proposed to overcome this problem. For instance, \cite{cheng1983estimating} proposed an estimation method based on the maximum product of spacing (MPS) which has excellent properties, such as invariance, consistency, and asymptotic efficiency. Most importantly, the asymptotic consistency of the MPS holds under more general conditions than those of MLEs. However, this estimator has a significant limitation since it does not allow the inclusion of censored data in its present form. Censored data occurs naturally in the industry where some components of the complete system will not fail during the study period and should be considered censored. Therefore, we propose a modification in the MPS to accommodate random type censorship, which has type I and type II censorship as particular cases. We will present a formal proof that both the MPS and the MLEs are asymptotically equivalent, i.e., consistent and asymptotically efficient. Finally, we will apply our method to estimate the parameters in distributions where the MLEs cannot be used.
+
+
+\section{Maximum Product of Spacing}
+
+
+The maximum product of spacing method is a powerful alternative to the MLEs to estimate the parameters. The procedure was proposed by \cite{cheng1983estimating} and \cite{ranneby} as an approximation of the Kullback-Leibler information measure. Similar to the MLEs, this method returns estimators with excellent properties such as invariance, consistency and asymptotic efficiency. However, the consistency of the estimator holds under more general conditions than those obtained by MLEs. Recent studies have shown that MPS returns better estimates for the parameters of interest than MLE, especially for small samples.  The uniform spacing for random sample $T_1,\ldots,T_N$ are given by
+\begin{equation}
+\begin{aligned}
+D_{i}(\boldsymbol{\theta};\boldsymbol{t})=&F\left( t_{(i)}\mid\boldsymbol{\theta};\boldsymbol{t}\right)
+-F\left( t_{(i-1)}\mid \boldsymbol{\theta} \right) \ \ \mbox{ for } \  i=1,2,\ldots ,n+1,
+\end{aligned}
+\end{equation}
+where $t_{(1)}<  \ldots < t_{(n)}$ are the order statistics, $F(t_{(0)}\mid \boldsymbol{\theta})=0$ and $F( t_{(n+1)}\mid
+\boldsymbol{\theta})=1.$ This implies that 
+$\sum_{i=1}^{n+1} D_i (\boldsymbol{\theta};\boldsymbol{t}) =1$. 
+
+The estimates for the parameters  $\hat{\theta}_i, i=1,\ldots,k$ are obtained from the maximization of the geometric mean of uniform spaces
+\begin{equation}\label{mpsmean1}
+G\left( \boldsymbol{\theta};\boldsymbol{t}\right) =\left[ \prod\limits_{i=1}^{n+1}D_{i}( \boldsymbol{\theta};\boldsymbol{t})\right] ^{%
+\frac{1}{n+1}}
+\end{equation}%
+in terms of $\boldsymbol{\theta}$, or, equivalently, by maximizing the logarithm of the geometric mean of uniform spaces
+\begin{equation}
+H\left( \boldsymbol{\theta};\boldsymbol{t}\right) =\frac{1}{n+1}\sum_{i=1}^{n+1}\log
+D_{i} ( \boldsymbol{\theta};\boldsymbol{t}).
+\end{equation}
+
+The vector of estimates $\hat{\boldsymbol{\theta}}_{MPS}$ can be otained from the solution of
+\begin{equation}
+\frac{1}{n+1}%
+\sum\limits_{i=1}^{n+1}\frac{1}{D_{i}(\boldsymbol{\theta};\boldsymbol{t})} \left[ \Delta_j
+(t_{(i)} |  \boldsymbol{\theta}) - \Delta_j (t_{(i-1)} |  \boldsymbol{\theta})
+\right] =0, \quad j=1,\ldots,k,
+\end{equation}
+where
+\begin{equation}\label{dervermps} \Delta_j(t_{(i)} |  \boldsymbol{\theta})= \frac{\partial}{\partial \theta_j}F(t_{(i)},\boldsymbol{\theta})=0 , i=1,2,\ldots,k.   \end{equation}
+
+Note that similar to the MLEs, when $n$ increase and under some regularity conditions, the MPS estimators are consistent, asymptotically efficient estimator, with multivariate normal distribution given by
+\begin{equation*}
+\hat{\boldsymbol{\theta}}_{MPS}\sim N_k\left[\boldsymbol{\theta},I^{-1}(\boldsymbol{\theta})\right] \mbox{ when } n \to \infty .
+\end{equation*}
+
+\section{MPS for right censored data}
+
+Note that this estimator does not allow the inclusion of censored observations. In this case, we propose a modification in the method to accommodate randomly censored data. Such type of censoring scheme has as particular cases type I and II censorship. Therefore, our method can be used in these cases. In the case of censorship, the data are usually represented by the pair $(t_i,\delta_i )$, where $t_i$ is the failure time or the censored time of the i-th component, and $\delta_i$ is an indicator function of censorship. 
+Here, the notation will be assumed by the conditional order statistics. Let $t_{(1)}< t_{(2)}< \ldots < t_{(d)}$ be the order statistics for the $k$ complete samples and $t_{(d+1)}< t_{(d+2)}< \ldots < t_{(n)}$ the conditional order statistics for  $n-d$ censored samples, the contribution in terms of information for the complete samples are
+\begin{equation}
+\begin{aligned}
+& D_{1}(\boldsymbol{\theta};\boldsymbol{t})=F\left( t_{(1)}\mid\boldsymbol{\theta}\right),
+ \\ & D_{2}(\boldsymbol{\theta};\boldsymbol{t})=F\left( t_{(2)}\mid\boldsymbol{\theta}\right)
+-F\left( t_{(1)}\mid \boldsymbol{\theta} \right), \\ &
+ \ \ \quad \quad \quad \quad  \vdots
+ \\ & D_{d+1}(\boldsymbol{\theta};\boldsymbol{t})=1-F\left( t_{(d)}\mid \boldsymbol{\theta} \right).
+\end{aligned}
+\end{equation}
+
+On the other hand, the contribution for the censored data is given by
+\begin{equation}
+\begin{aligned}
+D_{i}(\boldsymbol{\theta};\boldsymbol{t})=&1-F\left( t_{(i-1)}\mid \boldsymbol{\theta} \right)=S(t_{(i-1)}\mid \boldsymbol{\theta} ) \ \ \mbox{ for } \  i=d+2,d+2,\ldots ,n+1 .
+\end{aligned}
+\end{equation}
+
+Note that, the contribution for the censored term $D_{i}(\boldsymbol{\theta};\boldsymbol{t})$ is similar to the one observed in the MLEs. In fact, the MLE has an important relation with the MPS, by considering only the complete data, we have that
+\begin{equation}
+\lim_{t_{(i-1)} \to t_{(i)}} D_{i}(\boldsymbol{\theta};\boldsymbol{t})=\lim_{t_{(i-1)} \to t_{(i)}} \int_{t_{(i-1)}}^{t_{(i)}}f(t;\boldsymbol{\theta})dt=f(t_{(i)};\boldsymbol{\theta}),
+\end{equation}
+or it can be represented as
+\begin{equation}
+\begin{aligned}
+\log(D_{i}(\boldsymbol{\theta};\boldsymbol{t}))&=\log\left(\int_{t_{(i-1)}}^{t_{(i)}}f(t;\boldsymbol{\theta})dt \right)= \log\left(f(t_{(i)};\boldsymbol{\theta})(t_{(i)}-t_{(i-1)})\right)+R(t_{(i)},t_{(i-1)};\boldsymbol{\theta})) \\&= \log\left(f(t_{(i)};\boldsymbol{\theta})\right)+\log(t_{(i)}-t_{(i-1)})+R(t_{(i)},t_{(i-1)};\boldsymbol{\theta}))
+\end{aligned}
+\end{equation}
+where $R(t_{(i)},t_{(i-1)};\boldsymbol{\theta}))$ is the order $O(|t_{(i)}-t_{(i-1)})|)$ and $|t_{(i)}-t_{(i-1)})|\rightarrow 0$ in probability as $n$ increase. Therefore, $\log(D_{i}(\boldsymbol{\theta};\boldsymbol{t}))$ is essentially $\log\left(f(t_{(i)};\boldsymbol{\theta})\right)$ with respect to $\boldsymbol{\theta}$ except for a negligible number of terms. Hence, we showed that
+\begin{equation}
+\begin{aligned}
+H\left( \boldsymbol{\theta};\boldsymbol{t}\right) &=\frac{1}{n+1}\left(\sum_{i=1}^{d+1}\log
+D_{i} ( \boldsymbol{\theta};\boldsymbol{t})+\sum_{i=d+2}^{n+1}\log
+D_{i} ( \boldsymbol{\theta};\boldsymbol{t})\right)  \underset{n\rightarrow\infty}{\propto} \sum_{i=1}^{d}\log f(t_{(i)};\boldsymbol{\theta})+\sum_{i=d+1}^{n}\log
+S(t_{(i)};\boldsymbol{\theta}),
+\end{aligned}
+\end{equation}
+this implies that maximizing $H\left( \boldsymbol{\theta};\boldsymbol{t}\right)$ when $n\rightarrow\infty$ is the same as finding the solution to 
+\begin{equation}\label{mpsmean2}
+\underset{\boldsymbol{\theta}}{\operatorname{arg\,max}} \left[ \prod\limits_{i=1}^{n+1}D_{i}( \boldsymbol{\theta};\boldsymbol{t})\right] ^{%
+\frac{1}{n+1}}=\underset{\boldsymbol{\theta}}{\operatorname{arg\,max}} \left(\prod_{i=1}^n f(t_i|\boldsymbol{\theta})^{\delta_i}S(t_i|\boldsymbol{\theta})^{1-\delta_i}\right).
+\end{equation}%
+
+Therefore, similar to the  MLEs under censoring (under the same regularity conditions), the MPS estimators are consistent and asymptotically efficient, with multivariate normal distribution given by
+\begin{equation*}
+\hat{\boldsymbol{\theta}}_{MPS}\sim N_k\left[\boldsymbol{\theta},I^{-1}(\boldsymbol{\theta})\right] \mbox{ when } n \to \infty .
+\end{equation*}
+
+Here, we have provided an intuitive justification of the asymptotic properties and relationship with the MLEs, however, the results need to be formalized and the necessary conditions presented. Additionally, we will apply the method for data in the presence of random censoring with applications where the MLEs fails. 
+
+
+
+\section{Simulation study}
+A simulation study with 1000 experiments and a sample size of $n=(50,100,200,500)$ was performed to verify the well-behavior of the MPS estimator on the shifted Weibull, shifted lognormal, and shifted gamma distributions under three different sets of parameters, where the shift parameter was varying. for each parameter set, it was considered three different random censorship percentages, and the random censorship mechanism was based on \cite{Martinez2016}. Therefore, we present nine simulation study scenarios for each distribution. For each sample, we compute the Bias and residual mean square error (RMSE) estimates.
+
+Table \ref{Simulation_Weibull}, \ref{Simulation_Lognormal}, \ref{Simulation_Gamma} summary the results for the simulation study performed under the shifted Weibull, shifted lognormal, and shifted gamma distributions, respectively. Note that as the sample size increases, the bias and RMSE estimates decrease, suggesting that the MPS estimators are consistent even in a finite sample size.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccccccccccccc}
+  \hline
+  \multicolumn{3}{c}{} & \multicolumn{2}{c}{$n=50$} & \multicolumn{2}{c}{$n=100$} & \multicolumn{2}{c}{$n=200$} & \multicolumn{2}{c}{$n=500$} 
+  \\
+Censorship & Parameter & Real value & Bias & RMSE & Bias & RMSE & Bias & RMSE & Bias & RMSE \\ 
+\hline
+30\% & $\alpha$ & 2.00 & 0.653 & 1.066 & 0.332 & 0.469 & 0.189 & 0.243 & 0.103 & 0.132 \\ 
+   & $\beta$ & 1.50 & 0.3 & 0.45 & 0.159 & 0.209 & 0.091 & 0.115 & 0.05 & 0.063 \\ 
+   & $\gamma$ & 5.00 & 0.263 & 0.418 & 0.128 & 0.174 & 0.068 & 0.086 & 0.035 & 0.043 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 0.679 & 1.109 & 0.327 & 0.481 & 0.194 & 0.256 & 0.103 & 0.131 \\ 
+   & $\beta$ & 1.50 & 0.309 & 0.475 & 0.15 & 0.205 & 0.088 & 0.114 & 0.049 & 0.061 \\ 
+   & $\gamma$ & 3.00 & 0.27 & 0.44 & 0.121 & 0.173 & 0.069 & 0.089 & 0.034 & 0.042 \\ \cmidrule{2-11}
+   & $\alpha$ & 1.00 & 0.141 & 0.184 & 0.092 & 0.122 & 0.063 & 0.079 & 0.036 & 0.045 \\ 
+   & $\beta$ & 1.50 & 0.213 & 0.27 & 0.143 & 0.181 & 0.104 & 0.129 & 0.065 & 0.081 \\ 
+   & $\gamma$ & 1.00 & 0.03 & 0.043 & 0.014 & 0.019 & 0.007 & 0.009 & 0.002 & 0.003 \\ 
+  \hline
+50\% & $\alpha$ & 2.00 & 0.722 & 1.202 & 0.384 & 0.533 & 0.217 & 0.282 & 0.132 & 0.169 \\ 
+   & $\beta$ & 1.50 & 0.29 & 0.442 & 0.157 & 0.21 & 0.096 & 0.122 & 0.053 & 0.067 \\ 
+   & $\gamma$ & 5.00 & 0.253 & 0.415 & 0.13 & 0.181 & 0.07 & 0.091 & 0.037 & 0.047 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 0.778 & 1.391 & 0.371 & 0.54 & 0.22 & 0.289 & 0.122 & 0.158 \\ 
+   & $\beta$ & 1.50 & 0.321 & 0.523 & 0.149 & 0.206 & 0.091 & 0.117 & 0.054 & 0.068 \\ 
+   & $\gamma$ & 3.00 & 0.283 & 0.501 & 0.122 & 0.178 & 0.07 & 0.091 & 0.036 & 0.045 \\ \cmidrule{2-11}
+   & $\alpha$ & 1.00 & 0.186 & 0.244 & 0.122 & 0.155 & 0.074 & 0.093 & 0.043 & 0.054 \\ 
+   & $\beta$ & 1.50 & 0.318 & 0.459 & 0.189 & 0.244 & 0.126 & 0.162 & 0.083 & 0.103 \\ 
+   & $\gamma$ & 1.00 & 0.032 & 0.05 & 0.013 & 0.019 & 0.006 & 0.009 & 0.002 & 0.003 \\ 
+ \hline
+70\% & $\alpha$ & 2.00 & 0.973 & 1.605 & 0.536 & 0.844 & 0.322 & 0.423 & 0.174 & 0.222 \\ 
+   & $\beta$ & 1.50 & 0.45 & 1.006 & 0.198 & 0.28 & 0.109 & 0.14 & 0.063 & 0.079 \\ 
+   & $\gamma$ & 5.00 & 0.283 & 0.475 & 0.146 & 0.23 & 0.078 & 0.104 & 0.039 & 0.049 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 0.98 & 1.691 & 0.514 & 0.719 & 0.306 & 0.404 & 0.164 & 0.209 \\ 
+   & $\beta$ & 1.50 & 0.412 & 0.666 & 0.194 & 0.261 & 0.112 & 0.141 & 0.063 & 0.079 \\ 
+   & $\gamma$ & 3.00 & 0.282 & 0.494 & 0.141 & 0.2 & 0.08 & 0.104 & 0.039 & 0.049 \\ \cmidrule{2-11}
+   & $\alpha$ & 1.00 & 0.291 & 0.43 & 0.165 & 0.214 & 0.104 & 0.131 & 0.063 & 0.078 \\ 
+   & $\beta$ & 1.50 & 0.854 & 1.672 & 0.37 & 0.601 & 0.234 & 0.33 & 0.138 & 0.181 \\ 
+   & $\gamma$ & 1.00 & 0.037 & 0.075 & 0.015 & 0.023 & 0.006 & 0.009 & 0.002 & 0.003 \\ 
+   \hline
+\end{tabular}
+\caption{Simulation study for Shifted Weibull distribution, varying censorship percentage and shift parameter}\label{Simulation_Weibull}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccccccccccccc}
+  \hline
+Censorship & Parameter & Real value & Bias & RMSE & Bias & RMSE & Bias & RMSE & Bias & RMSE \\ 
+\hline
+30\% & $\mu$ & 1.50 & 0.264 & 0.334 & 0.186 & 0.229 & 0.123 & 0.155 & 0.076 & 0.096 \\ 
+   & $\sigma^2$ & 2.00 & 0.283 & 0.356 & 0.183 & 0.231 & 0.117 & 0.149 & 0.075 & 0.094 \\ 
+   & $\gamma$ & 5.00 & 0.063 & 0.09 & 0.031 & 0.042 & 0.016 & 0.021 & 0.008 & 0.01 \\ \cmidrule{2-11}
+   & $\mu$ & 1.50 & 0.265 & 0.334 & 0.174 & 0.218 & 0.124 & 0.157 & 0.075 & 0.094 \\ 
+   & $\sigma^2$ & 2.00 & 0.271 & 0.346 & 0.178 & 0.222 & 0.116 & 0.147 & 0.069 & 0.088 \\ 
+   & $\gamma$ & 3.00 & 0.066 & 0.1 & 0.031 & 0.042 & 0.016 & 0.021 & 0.007 & 0.009 \\ \cmidrule{2-11}
+   & $\mu$ & 1.50 & 0.263 & 0.331 & 0.176 & 0.222 & 0.116 & 0.147 & 0.075 & 0.093 \\ 
+   & $\sigma^2$ & 2.00 & 0.269 & 0.344 & 0.176 & 0.226 & 0.123 & 0.154 & 0.07 & 0.088 \\ 
+   & $\gamma$ & 1.00 & 0.063 & 0.089 & 0.03 & 0.041 & 0.017 & 0.022 & 0.008 & 0.01 \\ 
+\hline
+50\% & $\mu$ & 1.50 & 0.31 & 0.4 & 0.197 & 0.251 & 0.138 & 0.176 & 0.086 & 0.11 \\ 
+   & $\sigma^2$ & 2.00 & 0.383 & 0.497 & 0.225 & 0.293 & 0.15 & 0.187 & 0.084 & 0.106 \\ 
+   & $\gamma$ & 5.00 & 0.072 & 0.109 & 0.032 & 0.045 & 0.017 & 0.022 & 0.008 & 0.01 \\ \cmidrule{2-11}
+   & $\mu$ & 1.50 & 0.312 & 0.402 & 0.208 & 0.264 & 0.141 & 0.18 & 0.089 & 0.11 \\ 
+   & $\sigma^2$ & 2.00 & 0.389 & 0.512 & 0.238 & 0.301 & 0.156 & 0.2 & 0.09 & 0.113 \\ 
+   & $\gamma$ & 3.00 & 0.072 & 0.113 & 0.033 & 0.044 & 0.017 & 0.022 & 0.008 & 0.011 \\ \cmidrule{2-11}
+   & $\mu$ & 1.50 & 0.303 & 0.399 & 0.201 & 0.251 & 0.141 & 0.18 & 0.087 & 0.109 \\ 
+   & $\sigma^2$ & 2.00 & 0.368 & 0.491 & 0.226 & 0.293 & 0.159 & 0.197 & 0.087 & 0.109 \\ 
+   & $\gamma$ & 1.00 & 0.067 & 0.11 & 0.035 & 0.049 & 0.017 & 0.023 & 0.008 & 0.01 \\ 
+\hline
+70\% & $\mu$ & 1.50 & 0.577 & 0.976 & 0.329 & 0.448 & 0.212 & 0.276 & 0.125 & 0.16 \\ 
+   & $\sigma^2$ & 2.00 & 0.692 & 1.004 & 0.374 & 0.494 & 0.221 & 0.282 & 0.123 & 0.156 \\ 
+   & $\gamma$ & 5.00 & 0.081 & 0.159 & 0.039 & 0.062 & 0.018 & 0.024 & 0.008 & 0.011 \\ \cmidrule{2-11}
+   & $\mu$ & 1.50 & 0.529 & 0.806 & 0.327 & 0.447 & 0.205 & 0.27 & 0.126 & 0.16 \\ 
+   & $\sigma^2$ & 2.00 & 0.618 & 0.847 & 0.354 & 0.464 & 0.209 & 0.271 & 0.123 & 0.157 \\ 
+   & $\gamma$ & 3.00 & 0.088 & 0.224 & 0.035 & 0.05 & 0.018 & 0.025 & 0.009 & 0.011 \\ \cmidrule{2-11}
+   & $\mu$ & 1.50 & 0.583 & 0.87 & 0.314 & 0.415 & 0.208 & 0.267 & 0.129 & 0.162 \\ 
+   & $\sigma^2$ & 2.00 & 0.67 & 0.924 & 0.347 & 0.451 & 0.213 & 0.273 & 0.122 & 0.154 \\ 
+   & $\gamma$ & 1.00 & 0.097 & 0.263 & 0.037 & 0.055 & 0.019 & 0.025 & 0.009 & 0.011 \\ 
+   \hline
+\end{tabular}
+\caption{Simulation study for Shifted Lognormal distribution, varying censorship percentage and shift parameter}\label{Simulation_Lognormal}
+\end{table}
+
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccccccccccccc}
+  \hline
+Censorship & Parameter & Real value & Bias & RMSE & Bias & RMSE & Bias & RMSE & Bias & RMSE \\ 
+\hline
+30\% & $\alpha$ & 2.00 & 1.265 & 2.127 & 0.583 & 0.872 & 0.336 & 0.452 & 0.18 & 0.238 \\ 
+   & $\beta$ & 1.50 & 0.517 & 0.649 & 0.318 & 0.397 & 0.216 & 0.272 & 0.126 & 0.159 \\ 
+   & $\gamma$ & 5.00 & 0.414 & 0.619 & 0.207 & 0.29 & 0.109 & 0.143 & 0.057 & 0.073 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 1.234 & 2.119 & 0.61 & 0.933 & 0.332 & 0.464 & 0.179 & 0.23 \\ 
+   & $\beta$ & 1.50 & 0.504 & 0.642 & 0.321 & 0.405 & 0.213 & 0.269 & 0.13 & 0.16 \\ 
+   & $\gamma$ & 3.00 & 0.428 & 0.646 & 0.217 & 0.306 & 0.113 & 0.149 & 0.055 & 0.069 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 1.065 & 1.675 & 0.609 & 0.941 & 0.341 & 0.466 & 0.183 & 0.232 \\ 
+   & $\beta$ & 1.50 & 0.491 & 0.648 & 0.326 & 0.414 & 0.208 & 0.26 & 0.128 & 0.158 \\ 
+   & $\gamma$ & 1.00 & 0.385 & 0.539 & 0.21 & 0.294 & 0.115 & 0.151 & 0.058 & 0.072 \\ 
+   \hline
+50\% & $\alpha$ & 2.00 & 1.319 & 2.126 & 0.711 & 1.107 & 0.394 & 0.545 & 0.194 & 0.255 \\ 
+   & $\beta$ & 1.50 & 0.77 & 1.082 & 0.443 & 0.574 & 0.282 & 0.356 & 0.152 & 0.19 \\ 
+   & $\gamma$ & 5.00 & 0.417 & 0.604 & 0.219 & 0.314 & 0.12 & 0.161 & 0.056 & 0.071 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 1.277 & 2.056 & 0.685 & 1.045 & 0.39 & 0.537 & 0.221 & 0.293 \\ 
+   & $\beta$ & 1.50 & 0.705 & 1.055 & 0.464 & 0.623 & 0.271 & 0.34 & 0.165 & 0.207 \\ 
+   & $\gamma$ & 3.00 & 0.401 & 0.583 & 0.212 & 0.305 & 0.119 & 0.159 & 0.061 & 0.078 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 1.153 & 1.75 & 0.636 & 0.934 & 0.385 & 0.533 & 0.207 & 0.269 \\ 
+   & $\beta$ & 1.50 & 0.736 & 1.09 & 0.421 & 0.549 & 0.278 & 0.363 & 0.157 & 0.197 \\ 
+   & $\gamma$ & 1.00 & 0.372 & 0.506 & 0.202 & 0.277 & 0.118 & 0.157 & 0.058 & 0.073 \\ 
+ \hline
+70\% & $\alpha$ & 2.00 & 1.381 & 2.148 & 0.822 & 1.242 & 0.501 & 0.721 & 0.261 & 0.344 \\ 
+   & $\beta$ & 1.50 & 1.543 & 2.769 & 0.71 & 1.075 & 0.438 & 0.61 & 0.232 & 0.305 \\ 
+   & $\gamma$ & 5.00 & 0.389 & 0.55 & 0.222 & 0.309 & 0.132 & 0.181 & 0.064 & 0.082 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 1.369 & 2.118 & 0.873 & 1.336 & 0.512 & 0.734 & 0.275 & 0.373 \\ 
+   & $\beta$ & 1.50 & 1.467 & 2.477 & 0.746 & 1.328 & 0.419 & 0.54 & 0.238 & 0.3 \\ 
+   & $\gamma$ & 3.00 & 0.377 & 0.537 & 0.236 & 0.336 & 0.13 & 0.176 & 0.064 & 0.084 \\ \cmidrule{2-11}
+   & $\alpha$ & 2.00 & 1.367 & 2.051 & 0.85 & 1.307 & 0.515 & 0.762 & 0.272 & 0.361 \\ 
+   & $\beta$ & 1.50 & 1.558 & 2.651 & 0.763 & 1.189 & 0.435 & 0.589 & 0.232 & 0.299 \\ 
+   & $\gamma$ & 1.00 & 0.375 & 0.514 & 0.221 & 0.316 & 0.13 & 0.182 & 0.064 & 0.082 \\ 
+   \hline
+\end{tabular}
+\caption{Simulation study for Shifted gamma distribution, varying censorship percentage and shift parameter}\label{Simulation_Gamma}
+\end{table}
+
+\section{Conclusion}
+We introduced a modification of the maximum product spacing (MPS) estimator that accommodates randomly right--censored data, with Type~I and Type~II censoring as special cases. By decomposing the spacing contributions for failures and censored observations, we showed that the proposed objective is asymptotically equivalent to the censored likelihood, yielding an estimator that exists under broad conditions, is consistent, asymptotically normal, and achieves the Fisher information bound. Hence, the classical advantages of MPS—most notably existence and robustness of regularity requirements compared to MLE—carry over to the censored setting.
+
+A comprehensive Monte Carlo study across shifted Weibull, shifted lognormal, and shifted gamma models, for multiple censoring rates and sample sizes, confirmed the good finite-sample behavior of the method: bias and RMSE decrease as $n$ grows, and performance remains stable even in scenarios where likelihood-based estimation can be ill-behaved or fail to exist. These findings support the use of MPS as a practical and theoretically sound alternative to MLE for censored data.
+
+The proposed framework is simple to implement and readily applicable in reliability and survival analyses where censoring is the rule rather than the exception. \textsf{R} code used in this study is available upon request to facilitate replication and adoption.
+
+Future work includes extending the methodology to other censoring and truncation schemes (left/interval censoring, competing risks, and left truncation), developing regression formulations (e.g., accelerated failure-time models), investigating robustness and influence-function properties under model misspecification, and addressing computational refinements for heavy censoring. Applications to real data sets will further benchmark the method against likelihood- and Bayesian-based alternatives.
+%The codes are available in the supplemental material.
+
+
+\section*{Software}
+
+The software R (R Core Development Team) was used to conduct this simulation study. The codes implemented in this work are available under request.
+
+
+
+\section*{Acknowledgements}
+
+The research of 
+ Eduardo Ramos is supported by FAPESP
+(Grant number: 2023/13249-9) and CNPq (Grant number:  151231/2023-0).
+
+\bibliographystyle{plain}
+\bibliography{sample}
+
+\end{document}
